@@ -6,3 +6,5 @@ As funcionalidades presentes nesta aplicação são:
 - Pesquisar cantores
 - Criar playlists
 
+## Objetivo
+O objetivo desta apliação é apresentar exemplos de testes unitários utilizando Mockito e JUnit.
