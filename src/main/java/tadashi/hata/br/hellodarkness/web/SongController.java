@@ -3,7 +3,6 @@ package tadashi.hata.br.hellodarkness.web;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -11,12 +10,11 @@ import tadashi.hata.br.hellodarkness.domain.ApiResponse;
 import tadashi.hata.br.hellodarkness.domain.Song;
 import tadashi.hata.br.hellodarkness.service.SongService;
 
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
+import static tadashi.hata.br.util.Validation.isBetweenRange;
+
 import java.util.List;
 
 @RestController
-@Validated
 public class SongController {
 
     @Autowired
@@ -24,8 +22,12 @@ public class SongController {
 
     @GetMapping("/songs")
     public ResponseEntity<ApiResponse<List<Song>>> findSongs(
-            @RequestParam(value = "song-name", required = false) @Min(3) @Max(60) String songName
+            @RequestParam(name="song-name", required = false) String songName
     ) {
+        if(!(songName == null || songName.isEmpty()) && !isBetweenRange(songName, 3, 60)){
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        }
+
         List<Song> songs = songService.findSongs(songName);
 
         if(songs.isEmpty()){
